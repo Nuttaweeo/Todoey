@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    let itemArray = ["Find Mike", "Buy Egg", "Destory Demegogon"]
+    var itemArray = ["Find Mike", "Buy Egg", "Destory Demegogon"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,6 +48,40 @@ class TodoListViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true) // add animetion when row is selected
     }
+    
+    // Mark - Add New items botton
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        // Create this variable to store the data and use this "textfield" to pass data to any {} that inside addButtonPressed action
+        var textField = UITextField()
+        
+        // use UIAlertController for show the popup with have "action botton"
+        let alert =  UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        
+        
+        // use UIAlertAction to create an action botton in popup
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            // what will happen once the user clkcks the Add Item on our UIAlert
+            
+            self.itemArray.append(textField.text!) // add new todo list from textField to itemArray
+            
+            self.tableView.reloadData() // reload tableView to show the new list in Array that justed created
+            
+        }
+        
+        // add textfeild in popUp that will show this word "Create new item" and will disappear when user add text to textfield.
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create new item"
+            textField = alertTextField
+        }
+        
+        alert.addAction(action) // call alert.addAction(action) to use the add new item method.
+        
+        present(alert, animated: true, completion: nil) // call this method to show alert method
+        
+    }
+    
 
 
 }
