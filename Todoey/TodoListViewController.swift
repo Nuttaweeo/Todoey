@@ -11,9 +11,18 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Mike", "Buy Egg", "Destory Demegogon"]
+    
+    // stast using UserDefault
+    let defaults = UserDefaults.standard
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //to show new todo list that been added everytime when app is opened
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
+        
         
     }
     
@@ -65,6 +74,9 @@ class TodoListViewController: UITableViewController {
             // what will happen once the user clkcks the Add Item on our UIAlert
             
             self.itemArray.append(textField.text!) // add new todo list from textField to itemArray
+            
+            // set new item array to userdefault
+            self.defaults.setValue(self.itemArray, forKey: "TodoListArray")
             
             self.tableView.reloadData() // reload tableView to show the new list in Array that justed created
             
