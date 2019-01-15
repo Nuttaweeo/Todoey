@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         // ฟังชั่นนี้จะโหลดเมื่อแอปถูกเรียกใช้ ก่อนหน้าที่ viewcontoller หรืออะไรจะถูกโหลด โดยไม่สนว่าสุดท้าย แอปจะ crash หรือไม่
         
-        print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
         
         return true
     }

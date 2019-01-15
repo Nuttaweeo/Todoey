@@ -12,29 +12,17 @@ class TodoListViewController: UITableViewController {
     
     var itemArray = [Item]()
     
-    // stast using UserDefault
-    let defaults = UserDefaults.standard
-
+    
+    // creating the Item.plist to save all data in individual file inside iphone
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
+        
        
         
-        let newItem = Item()
-        newItem.title = "Find Mike"
-        itemArray.append(newItem)
-        
-        let newItem2 = Item()
-        newItem2.title = "Buy Eggos"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Destory Demogorgon"
-        itemArray.append(newItem3)
-        
-        //to show new todo list that been added everytime when app is opened
-        if let items = defaults.array(forKey: "TodoListArray") as? [Item] {
-            itemArray = items
-        }
+        loadItems()
 
         
     }
@@ -74,8 +62,8 @@ class TodoListViewController: UITableViewController {
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
+        saveItems()
         
-        tableView.reloadData()
         
         tableView.deselectRow(at: indexPath, animated: true) // add animetion when row is selected
     }
@@ -100,10 +88,9 @@ class TodoListViewController: UITableViewController {
             
             self.itemArray.append(newItem) // add new todo list from textField to itemArray
             
-            // set new item array to userdefault
-            self.defaults.setValue(self.itemArray, forKey: "TodoListArray")
+            self.saveItems()
             
-            self.tableView.reloadData() // reload tableView to show the new list in Array that justed created
+            
             
         }
         
@@ -119,7 +106,35 @@ class TodoListViewController: UITableViewController {
         
     }
     
+    //MARK - Model Manupulation Methods
+    
+    func saveItems() {
+        
+        // set new item array to userdefault
+        let encoder = PropertyListEncoder()
+        
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to :dataFilePath!)
+        } catch {
+            print("Error decoding item array, \(error)")
+            
+        }
+        self.tableView.reloadData() // reload tableView to show the new list in Array that justed created
+        
+    }
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self , from: data)
+            } catch {
+                print("Error decoding item array, \(error)")
+            }
+        
+    }
+
 
 
 }
-
+}
